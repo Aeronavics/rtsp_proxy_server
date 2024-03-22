@@ -141,9 +141,6 @@ int main(int argc, char **argv)
     // Open the rtsp list file
     std::ifstream input(argv[1]);
 
-    uint8_t counter = 1;
-    bool custom_cameras = false;
-
     if (input.is_open())
     {
         std::string line;
@@ -152,29 +149,18 @@ int main(int argc, char **argv)
         {
             if (line.front() == '#')
             {
-                *env << line.c_str() << "\n";
-                if (line == "# Custom Cameras")
-                {
-                    custom_cameras = true;
-                    counter = 1;
-                }
                 continue;
             }
             if (line == "")
             {
-                counter++;
                 continue;
             }
-            char streamName[30];
-            if (custom_cameras)
-            {
-                sprintf(streamName, "customStream-%d", counter); // there's more than one stream; distinguish them by name
-            }
-            else
-            {
-                sprintf(streamName, "proxyStream-%d", counter); // there's more than one stream; distinguish them by name
-            }
+            std::size_t pos = line.find(" ");
+            std::string url = line.substr(0, pos);
+            std::string name = line.substr(pos + 1);
+
             char const *proxiedStreamURL = line.c_str();
+            char const *streamName = name.c_str();
             ServerMediaSession *sms = ProxyServerMediaSession::createNew(*env, rtspServer,
                                                                         proxiedStreamURL, streamName,
                                                                         username, password, tunnelOverHTTPPortNum, verbosityLevel);
@@ -185,7 +171,6 @@ int main(int argc, char **argv)
             *env << "\tPlay this stream using the URL: " << proxyStreamURL << "\n";
             delete[] proxyStreamURL;
 
-            counter++;
         }
         input.close();
     }
