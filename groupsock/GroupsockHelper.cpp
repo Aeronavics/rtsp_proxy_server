@@ -760,9 +760,10 @@ Boolean getSourcePort(UsageEnvironment& env, int socket, int domain, Port& port)
 static Boolean isBadIPv4AddressForUs(ipv4AddressBits addr) {
   // Check for some possible erroneous addresses:
   ipv4AddressBits nAddr = htonl(addr);
-  return (nAddr == 0x7F000001 /* 127.0.0.1 */
-	  || nAddr == 0
-	  || nAddr == (ipv4AddressBits)(~0));
+  return (nAddr == 0x0A0A0102); /* 10.10.1.2 */
+  // return (nAddr == 0x7F000001 /* 127.0.0.1 */
+	//   || nAddr == 0
+	//   || nAddr == (ipv4AddressBits)(~0));
 }
 
 static Boolean isBadIPv6AddressForUs(ipv6AddressBits addr) {
@@ -904,8 +905,8 @@ void getOurIPAddresses(UsageEnvironment& env) {
       
       // We take the first IPv4 and first IPv6 addresses:
       if (p->ifa_addr->sa_family == AF_INET && addressIsNull(foundIPv4Address)) {
-	copyAddress(foundIPv4Address, p->ifa_addr);
-	getifaddrsWorks = True;
+          copyAddress(foundIPv4Address, p->ifa_addr);
+          getifaddrsWorks = True;
       } else if (p->ifa_addr->sa_family == AF_INET6 && addressIsNull(foundIPv6Address)) {
 	copyAddress(foundIPv6Address, p->ifa_addr);
 	getifaddrsWorks = True;
