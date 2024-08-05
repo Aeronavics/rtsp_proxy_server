@@ -760,7 +760,7 @@ Boolean getSourcePort(UsageEnvironment& env, int socket, int domain, Port& port)
 static Boolean isBadIPv4AddressForUs(ipv4AddressBits addr) {
   // Check for some possible erroneous addresses:
   ipv4AddressBits nAddr = htonl(addr);
-  return (nAddr == 0x0A0A0102); /* 10.10.1.2 */
+  return (nAddr != 0x0A0A0102); /* 10.10.1.2 */
   // return (nAddr == 0x7F000001 /* 127.0.0.1 */
 	//   || nAddr == 0
 	//   || nAddr == (ipv4AddressBits)(~0));

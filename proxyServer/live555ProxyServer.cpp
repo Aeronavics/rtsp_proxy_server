@@ -159,7 +159,7 @@ int main(int argc, char **argv)
             std::string url = line.substr(0, pos);
             std::string name = line.substr(pos + 1);
 
-            char const *proxiedStreamURL = line.c_str();
+            char const *proxiedStreamURL = url.c_str();
             char const *streamName = name.c_str();
             ServerMediaSession *sms = ProxyServerMediaSession::createNew(*env, rtspServer,
                                                                         proxiedStreamURL, streamName,
